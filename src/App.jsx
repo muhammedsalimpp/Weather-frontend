@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import myImage from "./assets/color.jpg";
 
-import { IoIosArrowDropdown } from "react-icons/io";
 
 const bgUrl =
   "https://pplx-res.cloudinary.com/image/private/user_uploads/68369657/8fbb68b6-a502-4379-bca8-14c8db2e15c8/image.jpg";
@@ -20,111 +19,15 @@ function App() {
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
 
-  const validateDateRange = () => {
-    if (!fromDate || !toDate) {
-      setError("Both dates must be selected.");
-      return false;
-    }
+  
 
-    const from = new Date(fromDate);
-    const to = new Date(toDate);
-
-    const differenceInDays = Math.ceil((to - from) / (1000 * 60 * 60 * 24));
-
-    if (differenceInDays < 0) {
-      setError("The 'To' date must be after the 'From' date.");
-      return false;
-    }
-
-    if (differenceInDays > 30) {
-      setError("The date range must not exceed 30 days.");
-      return false;
-    }
-
-    setError(""); // Clear errors if validation passes
-    return true;
-  };
-
-  const handleSubmit = () => {
-    if (validateDateRange()) {
-      console.log("Valid date range:", { fromDate, toDate });
-
-      let response;
-      async function getLatLong(selectedCity) {
-        try {
-          response = await axios.get(
-            `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=9e695b46c77f932190a56cf92dc45cef`
-          );
-
-          if (response?.data?.coord) {
-            const { lat, lon } = response.data.coord;
-            console.log(`Latitude: ${lat}, Longitude: ${lon}`);
-            setLat(lat);
-            setLong(lon);
-            return { lat, lon };
-          } else {
-            throw new Error("Latitude and Longitude data not found.");
-          }
-        } catch (error) {
-          console.error(
-            "Error fetching latitude and longitude:",
-            error.message
-          );
-          return null; // Return null if there's an error
-        }
-      }
-
-      getLatLong(selectedCity);
-
-      // console.log("responseresponseresponse",response);
-
-      async function getDate(lat, long, fromDate, toDate) {
-        console.log("Fetching weather data for lat:", lat, "long:", long);
-      
-        function convertDateToTimestamp(dateString) {
-          return Math.floor(new Date(dateString).getTime() / 1000);
-        }
-      
-        const fromTimestamp = convertDateToTimestamp(fromDate);
-        const toTimestamp = convertDateToTimestamp(toDate);
-      
-        console.log("From Timestamp:", fromTimestamp, "To Timestamp:", toTimestamp);
-      
-        try {
-          // Note: Removed `start` and `end` parameters as they are not supported
-          const response = await axios.get(
-            `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely&appid=9e695b46c77f932190a56cf92dc45cef`
-          );
-      
-          console.log("Weather Data:", response.data);
-      
-          // Filter data for the specified date range
-          const filteredData = response.data.hourly.filter((hour) => {
-            return hour.dt >= fromTimestamp && hour.dt <= toTimestamp;
-          });
-      
-          console.log("Filtered Data for Range:", filteredData);
-          return filteredData;
-        } catch (error) {
-          console.error("Error fetching weather data:", error.message);
-          return null; // Return null if there's an error
-        }
-      }
-      
  
-      
-      getDate(lat, long, fromDate, toDate);
-      
-      //       You said:
-      // GET https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&start={start_timestamp}&end={end_timestamp}&appid={API_KEY}
-    }
-  };
 
   // Fetch weather data
   const fetchWeather = async (city) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/weather/current?city=${city}`
+        `https://weatherbackend-68v1.onrender.com/api/weather/current?city=${city}`
       );
 
       const response2 = await axios.get(
@@ -214,73 +117,16 @@ function App() {
                 
 
                   
-                  
-                {/* <input
-  type="date"
-  value={fromDate}
-  onChange={(e) => setFromDate(e.target.value)}
-  style={{
-    backgroundColor: '#fff',
-    border: '2px solid #007bff',
-    borderRadius: '5px',
-    padding: '10px 5px',
-    fontSize: '16px',
-    fontFamily: "'Arial', sans-serif",
-    color: '#333',
-    width: '800%',
-    maxWidth: '110px',
-    outline: 'none',
-    transition: 'border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-  }}
-  onFocus={(e) => e.target.style.borderColor = '#0056b3'}
-  onBlur={(e) => e.target.style.borderColor = '#007bff'}
-/> */}
+           
 
                
             
                 
-                {/* <input
-  type="date"
-  value={fromDate}
-  onChange={(e) => setToDate(e.target.value)}
-  style={{
-    backgroundColor: '#fff',
-    border: '2px solid #007bff',
-    borderRadius: '5px',
-    padding: '10px 5px',
-    fontSize: '16px',
-    fontFamily: "'Arial', sans-serif",
-    color: '#333',
-    width: '100%',
-    maxWidth: '110px',
-    outline: 'none',
-    transition: 'border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-  }}
-  onFocus={(e) => e.target.style.borderColor = '#0056b3'}
-  onBlur={(e) => e.target.style.borderColor = '#007bff'}
-/> */}
+       
 
                
                 
-                {/* <button
-  style={{
-    color: "yellow",
-    backgroundColor: "black",
-    border: "2px solid #007bff",
-    borderRadius: "5px",
-    padding: "10px 20px",
-    fontSize: "10px",
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    cursor: "pointer",
-    transition: "all 0.3s ease-in-out",
-  }}
-  // onClick={handleSubmit}
-  className="btn btn-primary"
->
-  Submit
-</button> */}
-
+            
              
               <div >
              
@@ -322,7 +168,7 @@ function App() {
                     ☀️
                   </span>
                   <span className="display-2 fw-bold text-warning " >
-                    {temp?.temperature}
+                    {temp?.temperature}°
                   </span>
                   
                 </div>
